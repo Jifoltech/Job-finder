@@ -253,6 +253,10 @@ async function fetchJobs() {
   container.innerHTML = "";
 
   jobs.forEach((job) => {
+    const postedAt = job.created_at
+      ? new Date(job.created_at).toLocaleDateString()
+      : "Unknown";
+
     container.innerHTML += `
       <div class="job-item p-4 mb-4">
         <div class="row g-4">
@@ -260,17 +264,13 @@ async function fetchJobs() {
             <div class="text-start ps-4">
               <h5 class="mb-3">${job.title}</h5>
               <span class="text-truncate me-3">
-                <i class="fa fa-map-marker-alt text-primary me-2"></i>${
-                  job.location
-                }
+                <i class="fa fa-map-marker-alt text-primary me-2"></i>${job.location}
               </span>
               <span class="text-truncate me-3">
                 <i class="far fa-clock text-primary me-2"></i>${job.job_type}
               </span>
               <span class="text-truncate me-0">
-                <i class="far fa-money-bill-alt text-primary me-2"></i>${
-                  job.salary
-                }
+                <i class="far fa-money-bill-alt text-primary me-2"></i>${job.salary}
               </span>
             </div>
           </div>
@@ -279,15 +279,13 @@ async function fetchJobs() {
               <a class="btn btn-light btn-square me-3" href="#">
                 <i class="far fa-heart text-primary"></i>
               </a>
-              <a class="btn btn-primary" href="job-detail.html?job_id=${
-                job.id
-              }">
+              <a class="btn btn-primary" href="job-detail.html?job_id=${job.id}">
                 Apply Now
               </a>
             </div>
             <small class="text-truncate">
               <i class="far fa-calendar-alt text-primary me-2"></i>
-              Date Line: ${new Date(job.deadline).toDateString()}
+              Posted on: ${postedAt}
             </small>
           </div>
         </div>
@@ -362,6 +360,22 @@ if (applyForm) {
       alert("Please log in to apply.");
       return;
     }
+    // check if recruiter is the one applying for his own job
+    const { data: job, error: jobError } = await supabaseClient
+      .from("jobs")
+      .select("recruiter_id")
+      .eq("id", jobId)
+      .single();
+
+    if (jobError || !job) {
+      alert("failed to fetch job info");
+      return;
+    }
+
+    if (job.recruiter_id === user.id) {
+      alert("You cannot apply for your own job.");
+      return;
+    }
 
     // Upload CV to Supabase Storage
     const filePath = `private/${user.id}/cv-${Date.now()}-${cvFile.name}`;
@@ -416,13 +430,6 @@ if (applyForm) {
     setTimeout(() => {
       window.location.href = "job-list.html";
     }, 1500);
-
-    // preventing duplicate applications
-    // const { data: existingApps } = await supabaseClient
-    //   .from("applications")
-    //   .select("*")
-    //   .eq("job_id", jobId)
-    //   .eq("user_id", user.id);
   });
 }
 
