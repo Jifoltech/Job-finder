@@ -1,4 +1,3 @@
-document.getElementsByTagName("body").style.opacity = "0";
 (function ($) {
   "use strict";
 
@@ -74,6 +73,26 @@ document.getElementsByTagName("body").style.opacity = "0";
   });
 })(jQuery);
 
+// cleanUp modals
+function forceCloseAllModals() {
+  // Hide all visible modals manually
+  document.querySelectorAll(".modal.show").forEach((modalEl) => {
+    const instance = bootstrap.Modal.getInstance(modalEl);
+    instance?.hide();
+  });
+
+  // Remove backdrops
+  document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
+
+  // Remove scroll-locking class
+  document.body.classList.remove("modal-open");
+
+  // Clear inline styles added by Bootstrap (which may block scroll)
+  document.body.style = "";
+
+  window.scrollTo(0, 0);
+}
+
 // Toggle the login and signup modals for Job Seekers
 let loginModal;
 let signupModal;
@@ -89,14 +108,12 @@ if (signupModalElement) {
 document.getElementById("switchToSignup")?.addEventListener("click", (e) => {
   e.preventDefault();
   loginModal.hide();
-  // setTimeout(() => signupModal.show(), 300);
   signupModal.show();
 });
 
 document.getElementById("switchToLogin")?.addEventListener("click", (e) => {
   e.preventDefault();
   signupModal.hide();
-  // setTimeout(() => loginModal.show(), 300);
   loginModal.show();
 });
 
@@ -110,9 +127,11 @@ if (recruiterSignupModalElement) {
   recruiterSignupModal = new bootstrap.Modal(recruiterSignupModalElement);
 }
 
-recruiterLoginModal = document.getElementById("recruiterLoginModal");
-if (recruiterLoginModal) {
-  recruiterLoginModal = new bootstrap.Modal(recruiterLoginModal);
+const recruiterLoginModalElement = document.getElementById(
+  "recruiterLoginModal"
+);
+if (recruiterLoginModalElement) {
+  recruiterLoginModal = new bootstrap.Modal(recruiterLoginModalElement);
 }
 
 document
@@ -120,7 +139,6 @@ document
   ?.addEventListener("click", function (e) {
     e.preventDefault();
     recruiterSignupModal.hide();
-    // setTimeout(() => recruiterLoginModal.show(), 300);
     recruiterLoginModal.show();
   });
 
@@ -129,6 +147,20 @@ document
   ?.addEventListener("click", function (e) {
     e.preventDefault();
     recruiterLoginModal.hide();
-    // setTimeout(() => recruiterSignupModal.show(), 300);
     recruiterSignupModal.show();
   });
+
+document.querySelectorAll(".modal").forEach((modalEl) => {
+  modalEl.addEventListener("hidden.bs.modal", () => {
+    const anyOpen = document.querySelectorAll(".model.show");
+    if (!anyOpen) {
+      forceCloseAllModals();
+    }
+  });
+});
+
+document.querySelectorAll(".btn-cancel").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    forceCloseAllModals();
+  });
+});
