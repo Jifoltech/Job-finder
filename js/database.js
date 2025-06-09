@@ -54,6 +54,18 @@ if (signupForm) {
   });
 }
 
+// check if Recruiter already signed in
+// document.getElementById("postJobBtn")?.addEventListener("click", async (e) => {
+//   e.preventDefault();
+//   const {
+//     data: { user },
+//     error,
+//   } = await supabaseClient.auth.getUser();
+//   if (error || !user) {
+//     recruiterLoginModal?.show();
+//   }
+// });
+
 // handling Recruiter signup logic
 const recruiterSignupForm = document.getElementById("recruiter-signup-form");
 if (recruiterSignupForm) {
@@ -111,6 +123,7 @@ const recruiterLoginForm = document.getElementById("recruiter-login-form");
 if (recruiterLoginForm) {
   recruiterLoginForm.addEventListener("submit", async function (e) {
     e.preventDefault();
+
     const email = document.getElementById("recruiterLoginEmail").value;
     const password = document.getElementById("recruiterLoginPassword").value;
 
