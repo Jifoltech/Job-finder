@@ -1,4 +1,3 @@
-// document.body.style.opacity = 0;
 (function ($) {
   "use strict";
 
