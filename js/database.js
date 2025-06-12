@@ -93,7 +93,7 @@ if (recruiterSignupForm) {
           .insert([{ id: userId, email, company, role: "recruiter" }]);
       }
 
-      alert("Account created! Please check your email to verify.");
+      alert("Account created successfully.");
       recruiterSignupModal.hide();
       recruiterLoginModal.show();
     }
