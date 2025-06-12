@@ -481,9 +481,13 @@ async function getRecruiterJobs() {
 // fetch Applications linked to jobs
 async function getApplicationsForRecruiter() {
   const jobs = await getRecruiterJobs();
-  if (!jobs || jobs.length === 0) return;
+  if (!jobs || jobs.length === 0) {
+    console.warn("No jobs found for the recruiter.");
+    return;
+  }
 
   const jobIds = jobs.map((job) => job.id);
+  console.log("Recruiter job IDs:", jobIds);
 
   const { data: applications, error } = await supabaseClient
     .from("applications")
@@ -494,6 +498,7 @@ async function getApplicationsForRecruiter() {
     console.error("Error fetching applications:", error);
     return;
   }
+  console.log("Applications fetched:", applications);
 
   return { applications, jobs };
 }
