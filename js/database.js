@@ -513,14 +513,14 @@ async function renderDashboard() {
     jobs.map((job) => [job.id, job.title])
   );
 
-  const { publicUrl } = supabaseClient.storage
-    .from("cv-uploads")
-    .getPublicUrl(app.cv_url);
-
   const list = document.getElementById("applicationsList");
   list.innerHTML = "";
 
   applications.forEach((app) => {
+    const { publicUrl } = supabaseClient.storage
+      .from("cv-uploads")
+      .getPublicUrl(app.cv_url);
+
     list.innerHTML += `
       <div class="card mb-3">
         <div class="card-body">
