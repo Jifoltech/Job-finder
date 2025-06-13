@@ -517,9 +517,11 @@ async function renderDashboard() {
   list.innerHTML = "";
 
   applications.forEach((app) => {
-    const { publicUrl } = supabaseClient.storage
+    const { data } = supabaseClient.storage
       .from("cv-uploads")
       .getPublicUrl(app.cv_url);
+
+    const publicUrl = data?.publicUrl || "#";
 
     list.innerHTML += `
       <div class="card mb-3">
