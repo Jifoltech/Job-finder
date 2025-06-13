@@ -515,7 +515,7 @@ async function renderDashboard() {
 
   const { publicUrl } = supabaseClient.storage
     .from("cv-uploads")
-    .getPublicUrl("app.cv_url").publicUrl;
+    .getPublicUrl(app.cv_url);
 
   const list = document.getElementById("applicationsList");
   list.innerHTML = "";
