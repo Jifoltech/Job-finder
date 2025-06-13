@@ -515,7 +515,7 @@ async function renderDashboard() {
 
   const { publicUrl } = supabaseClient.storage
     .from("cv-uploads")
-    .getPublicUrl("app.cv_url");
+    .getPublicUrl("app.cv_url").publicUrl;
 
   const list = document.getElementById("applicationsList");
   list.innerHTML = "";
@@ -527,7 +527,7 @@ async function renderDashboard() {
           <h5>${app.name}</h5>
           <p>Email: ${app.email}</p>
           <p>Applied for: ${jobTitleMap[app.job_id]}</p>
-          <a href="${publicUrl}" target="_blank">Download CV</a>
+          <a href="${publicUrl}" target="_blank">Download Document</a>
         </div>
       </div>
     `;
