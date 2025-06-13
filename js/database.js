@@ -517,11 +517,12 @@ async function renderDashboard() {
   list.innerHTML = "";
 
   applications.forEach((app) => {
-    const { data } = supabaseClient.storage
-      .from("cv-uploads")
-      .getPublicUrl(app.cv_url);
+    // const { data } = supabaseClient.storage
+    //   .from("cv-uploads")
+    //   .getPublicUrl(app.cv_url);
 
-    const publicUrl = data?.publicUrl || "#";
+    // const publicUrl = data?.publicUrl || "#";
+    const publicUrl = app.cv_url;
 
     list.innerHTML += `
       <div class="card mb-3">
