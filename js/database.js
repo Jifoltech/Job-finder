@@ -487,7 +487,6 @@ async function getApplicationsForRecruiter() {
   }
 
   const jobIds = jobs.map((job) => job.id);
-  console.log("Recruiter job IDs:", jobIds);
 
   const { data: applications, error } = await supabaseClient
     .from("applications")
@@ -498,7 +497,6 @@ async function getApplicationsForRecruiter() {
     console.error("Error fetching applications:", error);
     return;
   }
-  console.log("Applications fetched:", applications);
 
   return { applications, jobs };
 }
@@ -517,11 +515,6 @@ async function renderDashboard() {
   list.innerHTML = "";
 
   applications.forEach((app) => {
-    // const { data } = supabaseClient.storage
-    //   .from("cv-uploads")
-    //   .getPublicUrl(app.cv_url);
-
-    // const publicUrl = data?.publicUrl || "#";
     const publicUrl = app.cv_url;
 
     list.innerHTML += `
